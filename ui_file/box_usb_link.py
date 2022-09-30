@@ -825,7 +825,7 @@ class Ui_MainWindow(object):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "TR9035"))
         self.groupBox.setTitle(_translate("MainWindow", "CONFIG"))
-        self.run_project_button.setText(_translate("MainWindow", "Run"))
+        self.run_project_button.setText(_translate("MainWindow", "SETTING"))
         self.phy_lane4.setText(_translate("MainWindow", "phy_lane4"))
         self.Jesd204B_subclass.setText(_translate("MainWindow", "Jesd204B_subclass"))
         self.communicate_mode.setText(_translate("MainWindow", "communicate_mode"))
