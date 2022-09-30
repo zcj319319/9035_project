@@ -137,7 +137,6 @@ class TR9305_CFG(REG_STRUCT):
                 self.super_object.textBrowser_error_log("Initialization device error!")
             else:
                 self.super_object.textBrowser_normal_log("Initialization device success!")
-                self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/on.png"))
         if self.communicate_mode == 'usb':
             if len(self.super_object.url_port) != 0:
                 dq = spi_attribute
@@ -212,20 +211,26 @@ class TR9305_CFG(REG_STRUCT):
             nRet = ControlSPI.VSI_InitSPI(ControlSPI.VSI_USBSPI, 0, byref(SPI_Init))
             if (nRet <= 0):
                 self.super_object.textBrowser_error_log("No device connect!")
+                self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/OFF.png"))
             else:
                 self.super_object.textBrowser_normal_log("Connected device number is:" + repr(nRet))
+                self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/on.png"))
                 # Open device
             nRet = ControlSPI.VSI_OpenDevice(ControlSPI.VSI_USBSPI, 0, 0)
             if (nRet != ControlSPI.ERR_SUCCESS):
                 self.super_object.textBrowser_error_log("Open device error!")
+                self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/OFF.png"))
             else:
                 self.super_object.textBrowser_normal_log("Open device success!")
+                self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/on.png"))
                 # Initialize device
             nRet = ControlSPI.VSI_InitSPI(ControlSPI.VSI_USBSPI, 0, byref(SPI_Init))
             if (nRet != ControlSPI.ERR_SUCCESS):
                 self.super_object.textBrowser_error_log("Initialization device error!")
+                self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/OFF.png"))
             else:
                 self.super_object.textBrowser_normal_log("Initialization device success!")
+                self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/on.png"))
         if self.communicate_mode == 'log':
             self.logfile = open('addrTbl.txt', 'w')
         if self.communicate_mode == 'usb':
@@ -234,9 +239,9 @@ class TR9305_CFG(REG_STRUCT):
                 dev_urls = Ftdi.list_devices()
                 # Scan device
                 if len(dev_urls) == 0:
-                    self.super_object.label_6.setPixmap(QtGui.QPixmap(":/images/OFF.png"))
+                    self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/OFF.png"))
                 else:
-                    self.super_object.label_6.setPixmap(QtGui.QPixmap(":/images/on.png"))
+                    self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/on.png"))
                     for i in range(dev_urls[0][1]):
                         self.super_object.url_port.append(
                             r'ftdi://ftdi:4232:' + str(dev_urls[0][0].bus) + ':' + str(
