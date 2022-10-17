@@ -15,17 +15,16 @@ from binascii import hexlify
 
 import xlrd
 import xlwt
-from PyQt5 import QtWidgets, QtGui
+
 from PyQt5.QtWidgets import QFileDialog, QMessageBox
-from ctypes import *
+
 from run_project.config_choose import TR9305_CFG
-from run_project.config_choose.TR9305_CFG import LoadMainWindow
-from run_project.config_choose.tr9305_case import spi_attribute
+from run_project.config_choose.spi_interface import LoadMainWindow, spi_interface
+
 from run_project.mainDialog1 import MainDialog1
 from ui_file import logo_rc
 from ui_file import status_rc
 from ui_file import struc_rc
-
 
 
 class LoadingPanel(LoadMainWindow):
@@ -34,6 +33,7 @@ class LoadingPanel(LoadMainWindow):
         self.sheet_sel_lst = None
         self.running_case = None
         self.reg_struct = None
+        self.spi_obj = None
         self.config_transfer = {}
         self.init_param()
         self.run_project_button.clicked.connect(self.run_btn_project)
@@ -161,7 +161,8 @@ class LoadingPanel(LoadMainWindow):
 
     def run_btn_project(self):
         self.reg_struct = self.check_parm()
-        self.running_case = TR9305_CFG.TR9305_CFG(self,**self.reg_struct)
+        self.spi_obj = spi_interface(self)
+        self.running_case = TR9305_CFG.TR9305_CFG(self.spi_obj,**self.reg_struct)
         self.running_case.tr9305_top_config()
 
     def clear_log_content(self):
@@ -174,10 +175,10 @@ class LoadingPanel(LoadMainWindow):
                 fileOpen.write(self.log_textBrowser.toPlainText())
 
     def spi_update_command(self):
-        try:
-            self.running_case.spi_update()
-        except Exception as e:
-            self.textBrowser_error_log('err:%s' % e)
+        self.reg_struct = self.check_parm()
+        self.spi_obj = spi_interface(self)
+        self.running_case = TR9305_CFG.TR9305_CFG(self.spi_obj,**self.reg_struct)
+        self.running_case.tr9305_top_config(True)
 
 
     def read_addr(self):
@@ -188,7 +189,10 @@ class LoadingPanel(LoadMainWindow):
             else:
                 addr_read = int(now_addr)
             read_value = self.running_case.read_atom(addr_read)
-            self.textEdit.setText(hex(int(hexlify(read_value[0]).decode(), 16)))
+            if isinstance(read_value[0],int):
+                self.textEdit.setText(hex(read_value[0]))
+            if isinstance((read_value[0]),bytearray):
+                self.textEdit.setText(hex(int(hexlify(read_value[0]).decode(), 16)))
             # read_value_bin = '{:0>8b}'.format(read_value[0])
         except Exception as e:
             self.textBrowser_error_log('read pushbutton pressed exists err:%s' % e)

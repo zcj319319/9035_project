@@ -66,7 +66,7 @@
             <x>0</x>
             <y>0</y>
             <width>269</width>
-            <height>849</height>
+            <height>822</height>
            </rect>
           </property>
           <layout class="QGridLayout" name="gridLayout">
@@ -97,22 +97,6 @@
              </property>
              <property name="text">
               <string>Jesd204B_subclass</string>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="0">
-            <widget class="QLabel" name="communicate_mode">
-             <property name="font">
-              <font>
-               <family>Times New Roman</family>
-               <pointsize>10</pointsize>
-               <weight>50</weight>
-               <italic>false</italic>
-               <bold>false</bold>
-              </font>
-             </property>
-             <property name="text">
-              <string>communicate_mode</string>
              </property>
             </widget>
            </item>
@@ -545,25 +529,6 @@
              <property name="text">
               <string>outputMode</string>
              </property>
-            </widget>
-           </item>
-           <item row="0" column="1">
-            <widget class="QComboBox" name="communicate_mode_comboBox">
-             <item>
-              <property name="text">
-               <string>log</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>box</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>usb</string>
-              </property>
-             </item>
             </widget>
            </item>
            <item row="2" column="1">
@@ -1154,9 +1119,34 @@
          <property name="title">
           <string>SPI_CFG</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_2">
-          <item>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="1" column="0">
+           <widget class="QLabel" name="communicate_mode">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>10</pointsize>
+              <weight>75</weight>
+              <italic>false</italic>
+              <bold>true</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Communicate_mode</string>
+            </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="4">
            <widget class="QLabel" name="label_3">
+            <property name="sizePolicy">
+             <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
             <property name="font">
              <font>
               <family>Times New Roman</family>
@@ -1165,12 +1155,30 @@
               <bold>true</bold>
              </font>
             </property>
+            <property name="layoutDirection">
+             <enum>Qt::LeftToRight</enum>
+            </property>
             <property name="text">
              <string>SPI_CLK</string>
             </property>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
+            </property>
            </widget>
           </item>
-          <item>
+          <item row="3" column="6">
+           <widget class="QLineEdit" name="lineEdit_2">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="4">
            <widget class="QLineEdit" name="lineEdit">
             <property name="font">
              <font>
@@ -1182,7 +1190,59 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="1" column="9" rowspan="4">
+           <widget class="QLabel" name="label_6">
+            <property name="text">
+             <string/>
+            </property>
+            <property name="pixmap">
+             <pixmap resource="status.qrc">:/status/OFF.png</pixmap>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="0">
+           <widget class="QComboBox" name="communicate_mode_comboBox">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <item>
+             <property name="text">
+              <string>usb</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>box</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>log</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="3" column="10">
+           <widget class="QPushButton" name="pushButton">
+            <property name="font">
+             <font>
+              <family>Times New Roman</family>
+              <pointsize>10</pointsize>
+              <weight>50</weight>
+              <bold>false</bold>
+             </font>
+            </property>
+            <property name="text">
+             <string>Connect</string>
+            </property>
+           </widget>
+          </item>
+          <item row="3" column="5">
            <widget class="QLabel" name="fs_32">
             <property name="font">
              <font>
@@ -1200,7 +1260,7 @@
             </property>
            </widget>
           </item>
-          <item>
+          <item row="1" column="6">
            <widget class="QLabel" name="label_4">
             <property name="font">
              <font>
@@ -1213,36 +1273,12 @@
             <property name="text">
              <string>TranBits</string>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLineEdit" name="lineEdit_2">
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>10</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
+            <property name="alignment">
+             <set>Qt::AlignCenter</set>
             </property>
            </widget>
           </item>
-          <item>
-           <widget class="QPushButton" name="pushButton">
-            <property name="font">
-             <font>
-              <family>Times New Roman</family>
-              <pointsize>10</pointsize>
-              <weight>50</weight>
-              <bold>false</bold>
-             </font>
-            </property>
-            <property name="text">
-             <string>Connect</string>
-            </property>
-           </widget>
-          </item>
-          <item>
+          <item row="0" column="9">
            <widget class="QLabel" name="label_5">
             <property name="font">
              <font>
@@ -1254,16 +1290,6 @@
             </property>
             <property name="text">
              <string>STATUS</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="label_6">
-            <property name="text">
-             <string/>
-            </property>
-            <property name="pixmap">
-             <pixmap resource="status.qrc">:/status/OFF.png</pixmap>
             </property>
            </widget>
           </item>
