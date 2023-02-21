@@ -1,5 +1,7 @@
 <RCC>
   <qresource prefix="logo">
+    <file>guowei.ico</file>
+    <file>guowei_resize.png</file>
     <file>logo.png</file>
   </qresource>
 </RCC>

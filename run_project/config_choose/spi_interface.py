@@ -104,6 +104,8 @@ class spi_interface:
                 read_data_str = hex(int(hexlify(read_data).decode(), 16))
                 info = 'read addr = ' + addr_str + ' data = ' + read_data_str
                 self.super_object.textBrowser_normal_log(info)
+                if read_buffer == [bytearray(b' ')]:
+                    read_buffer = [0]
                 return read_buffer
             except Exception as e:
                 print(e)
@@ -183,6 +185,15 @@ class spi_interface:
             except Exception as e:
                 self.super_object.textBrowser_normal_log("%s" % e)
 
+    def spi_release(self):
+        try:
+            self.super_object.port[0].close()
+            self.super_object.port[1].close()
+            self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/OFF.png"))
+            self.super_object.textBrowser_normal_log("release spi")
+        except Exception as e:
+            self.super_object.textBrowser_error_log('%s' % e)
+
     def spi_update(self):
         # 更新
         # Scan device
@@ -229,6 +240,11 @@ class spi_interface:
                     self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/OFF.png"))
                 else:
                     self.super_object.label_6.setPixmap(QtGui.QPixmap(":/status/on.png"))
+                    if len(self.super_object.port) > 0:
+                        self.super_object.port[0].close()
+                        self.super_object.port[1].close()
+                        self.super_object.port = []
+                        self.super_object.url_port = []
                     for i in range(dev_urls[0][1]):
                         self.super_object.url_port.append(
                             r'ftdi://ftdi:4232:' + str(dev_urls[0][0].bus) + ':' + str(
@@ -238,14 +254,18 @@ class spi_interface:
                     self.super_object.port[0].configure(self.super_object.url_port[0], cs_count=1)
                     self.super_object.port.append(SpiController())
                     self.super_object.port[1].configure(self.super_object.url_port[1], cs_count=1)
-                    self.super_object.port.append(GpioAsyncController())
-                    self.super_object.port[2].configure(self.super_object.url_port[2], direction=0xff, initial=0x83)
-                    self.super_object.port.append(GpioAsyncController())
-                    self.super_object.port[3].configure(self.super_object.url_port[3], direction=0x00, initial=0x0)
+                    # self.super_object.port.append(GpioAsyncController())
+                    # self.super_object.port[2].configure(self.super_object.url_port[2], direction=0xff, initial=0x83)
+                    # self.super_object.port.append(GpioAsyncController())
+                    # self.super_object.port[3].configure(self.super_object.url_port[3], direction=0x00, initial=0x0)
                     # Set channelA
                     dq = spi_attribute
                     self.super_object.spi_a = self.super_object.port[dq.chn].get_port(dq.cs)
-                    self.super_object.spi_a.set_frequency(dq.freq)
+                    if self.super_object.lineEdit.text() == '':
+                        SPI_Init_ClockSpeed = dq.freq
+                    else:
+                        SPI_Init_ClockSpeed = int(float(self.super_object.lineEdit.text()) * 1000000)
+                    self.super_object.spi_a.set_frequency(SPI_Init_ClockSpeed)
                     self.super_object.spi_a.set_mode(dq.mode)
                     self.super_object.textBrowser_normal_log(
                         'available device is %s' % ','.join(self.super_object.url_port))

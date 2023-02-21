@@ -7,6 +7,7 @@ Dependent files(Windows):Ginkgo_Driver.dll
 Dependent files(Linux):libGinkgo_Driver.so,libusb-1.0.so
 More Infomation:www.viewtool.com
 """
+import os
 from ctypes import *
 import platform
 # USB - SPI initialization structure
@@ -50,20 +51,25 @@ ERR_LOAD_KERNELDLL        = (-16)#
 ERR_CMD_FAILED            = (-17)#
 ERR_BUFFER_CREATE         = (-18)#
 
-
+absolute_path = os.getcwd()
+windows_64bit_dll_path = os.path.join(absolute_path, r'lib\windows\64bit\Ginkgo_Driver.dll')
+windows_32bit_dll_path = os.path.join(absolute_path, r'lib\windows\32bit\Ginkgo_Driver.dll')
+macos_dll_path = os.path.join(absolute_path, r'lib\macos\libGinkgo_Driver.dylib')
+linux_32bit_dll_path = os.path.join(absolute_path, r'lib\linux\32bit\libGinkgo_Driver.so')
+linux_64bit_dll_path = os.path.join(absolute_path, r'lib\linux\64bit\libGinkgo_Driver.so')
 # Import library
 if(platform.system()=="Windows"):
     if "64bit" in platform.architecture():
-        GinkgoLib = windll.LoadLibrary( "./Ginkgo_Driver.dll")
+        GinkgoLib = windll.LoadLibrary(windows_64bit_dll_path)
     else:
-        GinkgoLib = windll.LoadLibrary( ".\\lib\\windows\\32bit\\Ginkgo_Driver.dll" )
+        GinkgoLib = windll.LoadLibrary(windows_32bit_dll_path)
 elif(platform.system()=="Darwin"):
-    GinkgoLib = cdll.LoadLibrary( "./lib/macos/libGinkgo_Driver.dylib" )
+    GinkgoLib = cdll.LoadLibrary(macos_dll_path)
 elif(platform.system()=="Linux"):
     if "64bit" in platform.architecture():
-        GinkgoLib = cdll.LoadLibrary( "./lib/linux/64bit/libGinkgo_Driver.so" )
+        GinkgoLib = cdll.LoadLibrary(linux_64bit_dll_path)
     else:
-        GinkgoLib = cdll.LoadLibrary( "./lib/linux/32bit/libGinkgo_Driver.so" )
+        GinkgoLib = cdll.LoadLibrary(linux_32bit_dll_path)
 else:
     print("Unknown system")
 

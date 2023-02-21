@@ -1,0 +1,37 @@
+[
+    {
+        "tbl" : "CALIB_ALG_PARA",
+        "rangestart" : "0x800",
+        "rangeEnd" : "0xcff",
+        "base" : "0x800",
+        "file" : ["CALIB_ALG_PARA_I", "CALIB_ALG_PARA_Q"]
+    },
+    {
+        "tbl" : "CALIB_TOP_PARA",
+        "rangestart" : "0x700",
+        "rangeEnd" : "0x7ff",
+        "base" : "0x800",
+        "file" : ["CALIB_TOP_PARA_I", "CALIB_TOP_PARA_Q"]
+    },
+    {
+        "tbl" : "RFADC_ANA_PARA",
+        "rangestart" : "0x1000",
+        "rangeEnd" : "0x1fff",
+        "base" : "0x1000",
+        "file" : ["RFADC_ANA_PARA"]
+    },
+    {
+        "tbl" : "RFADC_TOP_PARA",
+        "rangestart" : "0x0",
+        "rangeEnd" : "0x6ff",
+        "base" : "0x0",
+        "file" : ["RFADC_TOP_PARA"]
+    },
+    {
+        "tbl" : "RFADC_TOP_PARA",
+        "rangestart" : "0xD00",
+        "rangeEnd" : "0xFFF",
+        "base" : "0x0",
+        "file" : ["RFADC_TOP_PARA"]
+    }
+]

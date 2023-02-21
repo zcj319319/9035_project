@@ -44,6 +44,8 @@ class LoadingPanel(LoadMainWindow):
         self.read_button.clicked.connect(self.read_addr)
         self.write_button.clicked.connect(self.write_addr)
         self.pushButton.clicked.connect(self.spi_update_command)
+        self.release_btn.clicked.connect(self.spi_release_command)
+        self.DFT_Btn.clicked.connect(self.dft_wei_test)
 
     def init_param(self):
         self.lineEdit.setText('1.25')
@@ -180,6 +182,13 @@ class LoadingPanel(LoadMainWindow):
         self.running_case = TR9305_CFG.TR9305_CFG(self.spi_obj,**self.reg_struct)
         self.running_case.tr9305_top_config(True)
 
+    def spi_release_command(self):
+        try:
+            self.spi_obj.spi_release()
+            self.reg_struct = None
+            self.config_transfer = {}
+        except Exception as e:
+            self.textBrowser_error_log("%s"%e)
 
     def read_addr(self):
         now_addr = self.addr_textEdit.text()
@@ -484,3 +493,9 @@ class LoadingPanel(LoadMainWindow):
     def read_mem_reg(self, addr0, addr1):
         read_data = self.spi_a.exchange([addr0, addr1], 4096)
         return read_data
+
+    def dft_wei_test(self):
+        try:
+            self.running_case.printDumpInfo()
+        except Exception as e:
+            self.textBrowser_error_log("%s"%e+' ,please connect device first!')

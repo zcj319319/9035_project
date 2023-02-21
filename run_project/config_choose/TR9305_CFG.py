@@ -7,6 +7,8 @@ Created on Fri Aug 26 09:21:00 2022
 
 import time
 
+from run_project.config_choose.TR9305_DFT import TR9305_DFT
+
 
 class REG_STRUCT:
     _structs = []
@@ -39,13 +41,21 @@ class TR9305_CFG(REG_STRUCT):
         self.logfile = None
         self.communicate_mode = None
         self._spi_cfg = spi_cfg
+        self.dft = TR9305_DFT(self._spi_cfg)
         super(TR9305_CFG, self).__init__(*args, **kwargs)
 
+    def printDumpInfo(self):
+        self.dft.dumpChipVal()
+        self.dft.printDumpInfo()
+
+
+
     def write_atom(self, addr, data):
+        self.dft.TR9305_DFT_LOG(addr,data)
         self._spi_cfg.write_atom(addr, data)
 
     def read_atom(self, addr):
-        self._spi_cfg.read_atom(addr)
+        return self._spi_cfg.read_atom(addr)
 
     def spi_config(self):
         self._spi_cfg.spi_config()
@@ -503,10 +513,26 @@ class TR9305_CFG(REG_STRUCT):
             self.Jesd204B_S = int(8 * self.Jesd204B_F * self.Jesd204B_L / self.Jesd204B_M / self.Jesd204B_N)
         self.write_atom(0x591, self.Jesd204B_S - 1)
         ##lane cross begin
-        self.write_atom(0x5b2, 0x45)
-        self.write_atom(0x5b3, 0x76)
-        self.write_atom(0x5b5, 0x3)
-        self.write_atom(0x5b6, 0x12)
+        if 'phy_lane0' not in dir(self):
+            self.phy_lane0 = 5
+        if 'phy_lane1' not in dir(self):
+            self.phy_lane1 = 4
+        if 'phy_lane2' not in dir(self):
+            self.phy_lane2 = 6
+        if 'phy_lane3' not in dir(self):
+            self.phy_lane3 = 7
+        if 'phy_lane4' not in dir(self):
+            self.phy_lane4 = 3
+        if 'phy_lane5' not in dir(self):
+            self.phy_lane5 = 0
+        if 'phy_lane6' not in dir(self):
+            self.phy_lane6 = 2
+        if 'phy_lane7' not in dir(self):
+            self.phy_lane7 = 1
+        self.write_atom(0x5b2, (self.phy_lane1 << 4) | (self.phy_lane0))
+        self.write_atom(0x5b3, (self.phy_lane3 << 4) | (self.phy_lane2))
+        self.write_atom(0x5b5, (self.phy_lane5 << 4) | (self.phy_lane4))
+        self.write_atom(0x5b6, (self.phy_lane7 << 4) | (self.phy_lane6))
         ##lane cross end
         mframe_len = '{:0>3x}'.format(self.Jesd204B_F * self.Jesd204B_K)
         self.write_atom(0x5e4, int(mframe_len[1:], 16))
@@ -517,7 +543,18 @@ class TR9305_CFG(REG_STRUCT):
 
     def calib_config(self):
         self.write_atom(0x800, 0x1)
+        self.write_atom(0x800 + 0x2, 0x1)
+        self.write_atom(0x800 + 0x3, 0x1)
+        self.write_atom(0x800 + 0x9, 0x3)
+        self.write_atom(0x800 + 0x1b, 0x8a)
+        self.write_atom(0x800 + 0x17, 0x14)
+        self.write_atom(0x800 + 0x18, 0x14)
         self.write_atom(0x800 + 0x10, 0x1)  ##dnc_en
+        self.write_atom(0x800 + 0x3c3, 0x1a)
+        self.write_atom(0x800 + 0x370, 0xcd)
+        self.write_atom(0x800 + 0x371, 0x86)
+        self.write_atom(0x800 + 0x372, 0x33)
+        self.write_atom(0x800 + 0x373, 0x79)
         self.write_atom(0x800 + 0x36f, 0x0)  ##gec_coeff_protect
         self.write_atom(0x800 + 0x350, 0x1)  ##gec_en
         self.write_atom(0x800 + 0x3a3, 0x0)  ##tios_refch
@@ -525,8 +562,11 @@ class TR9305_CFG(REG_STRUCT):
             self.tios_accnum_power2 = 0x14
         self.write_atom(0x800 + 0x3a4, self.tios_accnum_power2)
         self.write_atom(0x800 + 0x3a0, 0x1)  ##tios_en
+        self.write_atom(0x800 + 0x3df, 0x0)
         self.write_atom(0x800 + 0x3c7, 0x0)  ##tigain_round
         self.write_atom(0x800 + 0x3c0, 0x1)  ##tigain_en
+        self.write_atom(0x800 + 0x3fb, 0x2)
+        self.write_atom(0x800 + 0x3f7, 0x4)
         if 'tiskew_accnum_power2' not in dir(self):
             self.tiskew_accnum_power2 = 0x18
         self.write_atom(0x800 + 0x3f3, self.tiskew_accnum_power2)
@@ -552,24 +592,25 @@ class TR9305_CFG(REG_STRUCT):
         ##tios_overrange config
         self.write_atom(0x800 + 0x421, int(overrange_high_th[2:], 16))
         self.write_atom(0x800 + 0x422, int(overrange_high_th[:2], 16))
-        self.write_atom(0x800 + 0x425, 0x1)
-        self.write_atom(0x800 + 0x426, 0xff)
+        self.write_atom(0x800 + 0x425, 0x5)
+        self.write_atom(0x800 + 0x426, 0xf0)
         self.write_atom(0x800 + 0x420, 0x1)  ##overrange_en
         ##tigain_overrange config
         self.write_atom(0x800 + 0x457, int(overrange_high_th[2:], 16))
         self.write_atom(0x800 + 0x458, int(overrange_high_th[:2], 16))
         self.write_atom(0x800 + 0x459, int(overrange_low_th[2:], 16))
         self.write_atom(0x800 + 0x45a, int(overrange_low_th[:2], 16))
-        self.write_atom(0x800 + 0x45b, 0x1)  ##high_vol_th
-        self.write_atom(0x800 + 0x45c, 0xff)  ##low_vol_th
+        self.write_atom(0x800 + 0x45b, 0x5)  ##high_vol_th
+        self.write_atom(0x800 + 0x45c, 0xf0)  ##low_vol_th
         self.write_atom(0x800 + 0x456, 0x1)  ##overrange_en
         ##tiskew_overrange_config
         self.write_atom(0x800 + 0x460, int(overrange_high_th[2:], 16))
         self.write_atom(0x800 + 0x461, int(overrange_high_th[:2], 16))
         self.write_atom(0x800 + 0x462, int(overrange_low_th[2:], 16))
         self.write_atom(0x800 + 0x463, int(overrange_low_th[:2], 16))
-        self.write_atom(0x800 + 0x464, 0x1)  ##high_vol_th
-        self.write_atom(0x800 + 0x465, 0xff)  ##low_vol_th
+        self.write_atom(0x800 + 0x464, 0x5)  ##high_vol_th
+        self.write_atom(0x800 + 0x465, 0xf0)  ##low_vol_th
         self.write_atom(0x800 + 0x45f, 0x1)  ##overrange_en
 
         self.write_atom(0x801, 0x1)
+        self.write_atom(0x80a, 0xa)

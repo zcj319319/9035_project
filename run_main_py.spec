@@ -4,13 +4,16 @@
 block_cipher = None
 
 binaries = [
-   ('C:\\Windows\\System32\\libusb0.dll', '.'),
+   ('C:\\Windows\\System32\\libusb0.dll','.'),
+   ('D:\pythonProject\9035_project\TR9305_DFT_FUNC.py','.')
 ]
+
+datas = [('res','res')]
 
 a = Analysis(['run_main_py.py'],
              pathex=[],
              binaries=binaries,
-             datas=[],
+             datas=datas,
              hiddenimports=[],
              hookspath=[],
              hooksconfig={},
@@ -29,7 +32,7 @@ exe = EXE(pyz,
           a.zipfiles,
           a.datas,  
           [],
-          name='run_main_py',
+          name='SM9208MP',
           debug=False,
           bootloader_ignore_signals=False,
           strip=False,
